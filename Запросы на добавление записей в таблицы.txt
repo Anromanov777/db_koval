@@ -1,0 +1,2 @@
+INSERT INTO books (name,date_relis,autor,genre_id) VALUES ('Чук и Гек','1939','Аркадий Гайдар',1);
+INSERT INTO genres (genre) VALUES ('Детская литература');
