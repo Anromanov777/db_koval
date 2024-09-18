@@ -1,9 +1,6 @@
 package db;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class Main {
     static Statement statement;
@@ -15,7 +12,9 @@ public class Main {
         int a = statement.executeUpdate("CREATE TABLE if not exists types(id INTEGER PRIMARY KEY AUTOINCREMENT,type VARCHAR(100) NOT NULL)");
         delete_type(7);
         update_type(9,"Чеширский кот");
-
+        //System.out.println(get_type(15));
+        get_type_where("type LIKE '%п'");
+        get_all_types();
     }
 
     private static int insert_type(String type) throws SQLException {
@@ -32,6 +31,28 @@ public class Main {
     private static void delete_type(int id) throws SQLException {
         String s = "DELETE FROM types WHERE id =" + id + ";";
         statement.executeUpdate(s);
+    }
+
+    private  static String get_type(int id) throws SQLException {
+        String s ="SELECT type FROM types WHERE id="+id;
+        ResultSet a= statement.executeQuery(s);
+        return a.getString(1);
+    }
+
+    private  static void get_type_where(String where) throws SQLException {
+        String s ="SELECT type FROM types WHERE "+where+";";
+        ResultSet a= statement.executeQuery(s);
+        while (a.next()){
+            System.out.println(a.getString("type"));
+        }
+    }
+
+    private  static void get_all_types() throws SQLException {
+        String s ="SELECT type FROM types;";
+        ResultSet a= statement.executeQuery(s);
+        while (a.next()){
+            System.out.println(a.getRow()+" "+a.getString("type"));
+        }
     }
 
     static String[] types = new String[]{"Абиссинская кошка",
