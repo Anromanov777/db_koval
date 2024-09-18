@@ -9,7 +9,8 @@ public class Main {
         Class.forName("org.sqlite.JDBC");
         Connection conn = DriverManager.getConnection("jdbc:sqlite:F:\\JAVA\\dbe\\My_cats.db");
         statement = conn.createStatement();
-        int a = statement.executeUpdate("CREATE TABLE if not exists types(id INTEGER PRIMARY KEY AUTOINCREMENT,type VARCHAR(100) NOT NULL)");
+        //int a = statement.executeUpdate("CREATE TABLE if not exists types(id INTEGER PRIMARY KEY AUTOINCREMENT,type VARCHAR(100) NOT NULL)");
+        int a = statement.executeUpdate("CREATE TABLE if not exists cats(id INTEGER PRIMARY KEY AUTOINCREMENT,name VARCHAR(20) NOT NULL,type_id INTEGER NOT NULL REFERENCES types(id),age INTEGER NOT NULL,weight DOUBLE)");
         delete_type(7);
         update_type(9,"Чеширский кот");
         //System.out.println(get_type(15));
