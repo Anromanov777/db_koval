@@ -13,31 +13,43 @@ public class Main {
         Connection conn = DriverManager.getConnection("jdbc:sqlite:F:\\JAVA\\dbe\\My_cats.db");
         statement = conn.createStatement();
         int a = statement.executeUpdate("CREATE TABLE if not exists cats(id INTEGER PRIMARY KEY AUTOINCREMENT,name VARCHAR(20) NOT NULL,type_id INTEGER NOT NULL REFERENCES types(id),age INTEGER NOT NULL,weight DOUBLE)");
-        delete_type(7);
-        update_type(9, "Чеширский кот");
-
-        for (int i = 0; i < 5000; i++) {
-            Random random = new Random();
-            String name = names[random.nextInt(names.length)];
-            String type_id = types[random.nextInt(types.length)];
-            int age = random.nextInt(23);
-            double weight = Math.round(random.nextDouble(20)*100)/100.0 ;
-            insert_cat(name, type_id, age, weight);
-        }
+        delete_cat("id>7300");
     }
 
-    private static void insert_cat(String name, String type, int age, Double weight) throws SQLException {
-        ResultSet resultSet = statement.executeQuery("SELECT id FROM types WHERE type = '" + type + "'");
-        if (resultSet.next()) {
-            String s = "INSERT INTO cats (name,type_id,age,weight) VALUES ('" + name + "'," + resultSet.getInt(1) + "," + age + "," + weight + ")";
-            statement.executeUpdate(s);
-        } else {
-            String s = "INSERT INTO types(type) VALUES ('" + type + "')";
-            statement.executeUpdate(s);
-            s = "SELECT id FROM types WHERE type = '" + type + "';";
-            ResultSet resultSet1 = statement.executeQuery(s);
-            s = "INSERT INTO cats (name,type_id,age,weight) VALUES ('" + name + "'," + resultSet1.getInt(1) + "," + age + "," + weight + ")";
-            statement.executeUpdate(s);
+
+    private static void delete_cat(String where)  throws SQLException {
+        String s ="DELETE FROM cats WHERE "+where+";";
+        statement.executeUpdate(s);
+    }
+
+
+
+    private static void delete_cat(int id) throws SQLException {
+        String s ="DELETE FROM cats WHERE id="+id+";";
+        statement.executeUpdate(s);
+    }
+
+    private static void add_more_cats(int n) throws SQLException {
+        for (int i = 0; i < n; i++) {
+            Random random = new Random();
+            String name = names[random.nextInt(names.length)];
+            String type = types[random.nextInt(types.length)];
+            int age = random.nextInt(23);
+            double weight = Math.round(random.nextDouble(20) * 100) / 100.0;
+
+            ResultSet resultSet = statement.executeQuery("SELECT id FROM types WHERE type = '" + type + "'");
+            if (resultSet.next()) {
+                String s = "INSERT INTO cats (name,type_id,age,weight) VALUES ('" + name + "'," + resultSet.getInt(1) + "," + age + "," + weight + ")";
+                statement.executeUpdate(s);
+            } else {
+                String s = "INSERT INTO types(type) VALUES ('" + type + "')";
+                statement.executeUpdate(s);
+                s = "SELECT id FROM types WHERE type = '" + type + "';";
+                ResultSet resultSet1 = statement.executeQuery(s);
+                s = "INSERT INTO cats (name,type_id,age,weight) VALUES ('" + name + "'," + resultSet1.getInt(1) + "," + age + "," + weight + ")";
+                statement.executeUpdate(s);
+            }
+            System.out.println("Добавился котик с номером: " + i);
         }
     }
 
